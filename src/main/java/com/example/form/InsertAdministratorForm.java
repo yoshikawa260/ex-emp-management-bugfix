@@ -2,7 +2,6 @@ package com.example.form;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * 管理者情報登録時に使用するフォーム.
