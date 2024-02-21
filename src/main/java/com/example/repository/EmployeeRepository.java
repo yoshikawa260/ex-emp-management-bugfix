@@ -135,10 +135,10 @@ public class EmployeeRepository {
 			characteristics,
 			dependents_count
 			FROM employees
-			where name like '%' || :name || '%'
+			where name like :name
 			ORDER BY hire_date desc
 						""";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", searchName);
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%");
 		List<Employee> searchList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 
 		return searchList;
