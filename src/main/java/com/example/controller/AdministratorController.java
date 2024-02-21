@@ -85,7 +85,12 @@ public class AdministratorController {
 		if(administratorService.findByMailAddress(insertAdministratorForm.getMailAddress()) != null){
 			// // エラーメッセージをリダイレクト先に渡す
 			redirectAttributes.addFlashAttribute("errorMessage", "このメールアドレスは既に登録されています");
-			return "redirect:/toInsert";
+			return toInsert(insertAdministratorForm, model);
+		}
+		if(!(insertAdministratorForm.getPassword().equals(insertAdministratorForm.getConfirmationPassword()))) {
+			// // エラーメッセージをリダイレクト先に渡す
+			redirectAttributes.addFlashAttribute("errorMessage", "パスワードと確認用パスワードが一致しません");
+			return toInsert(insertAdministratorForm, model);
 		}
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
@@ -120,6 +125,7 @@ public class AdministratorController {
 			redirectAttributes.addFlashAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return "redirect:/";
 		}
+		session.setAttribute("administratorName", administrator.getName());
 		return "redirect:/employee/showList";
 	}
 
