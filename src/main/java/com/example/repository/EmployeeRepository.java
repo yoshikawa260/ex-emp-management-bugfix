@@ -65,7 +65,7 @@ public class EmployeeRepository {
 			dependents_count 
 			FROM employees
 			ORDER BY hire_date desc
-					""";;
+					""";
 
 		List<Employee> developmentList = template.query(sql, EMPLOYEE_ROW_MAPPER);
 
