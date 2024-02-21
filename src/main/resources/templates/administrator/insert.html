@@ -42,6 +42,13 @@
 
             <!-- ここにモックのform要素を貼り付けます -->
 
+            <!-- 追記 -->
+            <div th:if="${errorMessage}" class="alert alert-danger">
+              <p th:text="${errorMessage}">
+                メールアドレスまたはパスワードが間違っています
+              </p>
+            </div>
+
             <form
               method="post"
               action="login.html"
