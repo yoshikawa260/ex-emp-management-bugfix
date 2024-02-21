@@ -84,12 +84,12 @@ public class AdministratorController {
 
 		if(administratorService.findByMailAddress(insertAdministratorForm.getMailAddress()) != null){
 			// // エラーメッセージをリダイレクト先に渡す
-			redirectAttributes.addFlashAttribute("errorMessage", "このメールアドレスは既に登録されています");
+			model.addAttribute("errorMessage", "このメールアドレスは既に登録されています");
 			return toInsert(insertAdministratorForm, model);
 		}
 		if(!(insertAdministratorForm.getPassword().equals(insertAdministratorForm.getConfirmationPassword()))) {
 			// // エラーメッセージをリダイレクト先に渡す
-			redirectAttributes.addFlashAttribute("errorMessage", "パスワードと確認用パスワードが一致しません");
+			model.addAttribute("errorMessage", "パスワードと確認用パスワードが一致しません");
 			return toInsert(insertAdministratorForm, model);
 		}
 		Administrator administrator = new Administrator();
