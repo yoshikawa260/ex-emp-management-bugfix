@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.domain.Employee;
 import com.example.repository.EmployeeRepository;
 
+
 /**
  * 従業員情報を操作するサービス.
  * 
@@ -51,5 +52,17 @@ public class EmployeeService {
 	 */
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
+	}
+
+
+	/**
+	 * 従業員情報を検索します.
+	 * 
+	 * @param searchName 検索する名前
+	 * @return 検索された従業員情報
+	 */
+	public List<Employee>search(String searchName){
+		List<Employee> employeeList = employeeRepository.search(searchName);
+		return employeeList;
 	}
 }
