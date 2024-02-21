@@ -123,8 +123,33 @@
                         name="password"
                         id="password"
                         class="form-control"
-                        placeholder="password"
+                        placeholder="XXXX"
                         th:field="*{password}"
+                        th:errorclass="error-input"
+                        value="xxxxxxxx"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- 確認用パスワード -->
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <label for="password"> 確認用パスワード: </label>
+                      <label
+                        th:errors="*{confirmationPassword}"
+                        class="error-messages"
+                      >
+                        パスワードと同じパスワードを入力してください
+                      </label><br>
+                      <span id="confirmationPasswordKey"></span>
+                      <input
+                        type="password"
+                        name="confirmationPassword"
+                        id="confirmationPassword"
+                        class="form-control"
+                        placeholder="XXXX"
+                        th:field="*{confirmationPassword}"
                         th:errorclass="error-input"
                         value="xxxxxxxx"
                       />
@@ -151,6 +176,7 @@
     </div>
     <!-- end container -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/AdministratorInsert.js}"></script>
   </body>
 </html>

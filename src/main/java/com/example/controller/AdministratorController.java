@@ -87,6 +87,11 @@ public class AdministratorController {
 			redirectAttributes.addFlashAttribute("errorMessage", "このメールアドレスは既に登録されています");
 			return "redirect:/toInsert";
 		}
+		if(!(insertAdministratorForm.getPassword().equals(insertAdministratorForm.getConfirmationPassword()))) {
+			// // エラーメッセージをリダイレクト先に渡す
+			redirectAttributes.addFlashAttribute("errorMessage", "パスワードと確認用パスワードが一致しません");
+			return "redirect:/toInsert";
+		}
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
 		BeanUtils.copyProperties(insertAdministratorForm, administrator);
