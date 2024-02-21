@@ -49,10 +49,12 @@ public class EmployeeRepository {
 	 * 
 	 * @return 全従業員一覧 従業員が存在しない場合はサイズ0件の従業員一覧を返します
 	 */
+	//hire_dateを年月日で表示するために、hire_dateをDate型で取得する
 	public List<Employee> findAll() {
 		String sql = """
 			SELECT 
-			id,name,
+			id,
+			name,
 			image,
 			gender,
 			hire_date,
@@ -65,7 +67,7 @@ public class EmployeeRepository {
 			dependents_count 
 			FROM employees
 			ORDER BY hire_date desc
-					""";;
+					""";
 
 		List<Employee> developmentList = template.query(sql, EMPLOYEE_ROW_MAPPER);
 
