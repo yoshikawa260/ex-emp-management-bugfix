@@ -92,4 +92,25 @@ public class EmployeeController {
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
 	}
+
+	@PostMapping("/search")
+	public String search(String searchName, Model model) {
+		if(searchName.equals("")){
+			List<Employee> employeeList = employeeService.showList();
+			model.addAttribute("employeeList", employeeList);
+			return "employee/searchList";
+		}
+
+		List<Employee> employeeList = employeeService.search(searchName);
+
+		if(employeeList.size() == 0){
+			employeeList = employeeService.showList();
+			model.addAttribute("errorMessage", "１件もありませんでした");
+			model.addAttribute("employeeList", employeeList);
+			return "employee/searchList";
+		}
+
+		model.addAttribute("employeeList", employeeList);
+		return "employee/searchList";
+	}
 }

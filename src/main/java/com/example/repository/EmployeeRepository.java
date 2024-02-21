@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.domain.Employee;
 
+import org.springframework.ui.Model;
+
 /**
  * employeesテーブルを操作するリポジトリ.
  * 
@@ -49,25 +51,25 @@ public class EmployeeRepository {
 	 * 
 	 * @return 全従業員一覧 従業員が存在しない場合はサイズ0件の従業員一覧を返します
 	 */
-	//hire_dateを年月日で表示するために、hire_dateをDate型で取得する
+	// hire_dateを年月日で表示するために、hire_dateをDate型で取得する
 	public List<Employee> findAll() {
 		String sql = """
-			SELECT 
-			id,
-			name,
-			image,
-			gender,
-			hire_date,
-			mail_address,
-			zip_code,
-			address,
-			telephone,
-			salary,
-			characteristics,
-			dependents_count 
-			FROM employees
-			ORDER BY hire_date desc
-					""";
+				SELECT
+				id,
+				name,
+				image,
+				gender,
+				hire_date,
+				mail_address,
+				zip_code,
+				address,
+				telephone,
+				salary,
+				characteristics,
+				dependents_count
+				FROM employees
+				ORDER BY hire_date desc
+						""";
 
 		List<Employee> developmentList = template.query(sql, EMPLOYEE_ROW_MAPPER);
 
@@ -83,22 +85,22 @@ public class EmployeeRepository {
 	 */
 	public Employee load(Integer id) {
 		String sql = """
-			SELECT 
-			id,
-			name,
-			image,
-			gender,
-			hire_date,
-			mail_address,
-			zip_code,
-			address,
-			telephone,
-			salary,
-			characteristics,
-			dependents_count 
-			FROM employees 
-			WHERE id=:id
-			""" ;
+				SELECT
+				id,
+				name,
+				image,
+				gender,
+				hire_date,
+				mail_address,
+				zip_code,
+				address,
+				telephone,
+				salary,
+				characteristics,
+				dependents_count
+				FROM employees
+				WHERE id=:id
+				""";
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 
@@ -115,5 +117,30 @@ public class EmployeeRepository {
 
 		String updateSql = "UPDATE employees SET dependents_count=:dependentsCount WHERE id=:id";
 		template.update(updateSql, param);
+	}
+
+	public List<Employee> search(String searchName) {
+		String sql = """
+			SELECT
+			id,
+			name,
+			image,
+			gender,
+			hire_date,
+			mail_address,
+			zip_code,
+			address,
+			telephone,
+			salary,
+			characteristics,
+			dependents_count
+			FROM employees
+			where name like :name
+			ORDER BY hire_date desc
+						""";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%");
+		List<Employee> searchList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+
+		return searchList;
 	}
 }
