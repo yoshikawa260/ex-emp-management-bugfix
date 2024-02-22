@@ -3,6 +3,7 @@ package com.example.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -143,4 +144,42 @@ public class EmployeeRepository {
 
 		return searchList;
 	}
+
+	public List<Employee> PagefindAll(int page) {
+		String sql = """
+				SELECT
+				id,
+				name,
+				image,
+				gender,
+				hire_date,
+				mail_address,
+				zip_code,
+				address,
+				telephone,
+				salary,
+				characteristics,
+				dependents_count
+				FROM employees
+				ORDER BY hire_date desc
+				LIMIT 10 
+				OFFSET :offset
+				""";
+	
+		int offset = page * 10;
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("offset", offset);
+	
+		List<Employee> employeeList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
+	
+		return employeeList;
+
+}
+	public int count() {
+		String sql = "SELECT COUNT(*) FROM employees";
+		SqlParameterSource param = new MapSqlParameterSource();
+		int count = template.queryForObject(sql, param, Integer.class);
+		return count;
+	}
+
 }
