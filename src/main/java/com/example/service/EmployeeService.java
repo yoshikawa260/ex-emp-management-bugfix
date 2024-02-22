@@ -65,4 +65,14 @@ public class EmployeeService {
 		List<Employee> employeeList = employeeRepository.search(searchName);
 		return employeeList;
 	}
+
+	//従業員情報に登録されているレコード数を取得する
+	public int count(){
+		return employeeRepository.count();
+	}
+
+	//従業員情報をページングして取得する
+	public List<Employee> PagefindAll(int page){
+		return employeeRepository.PagefindAll(page);
+	}
 }

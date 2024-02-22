@@ -58,12 +58,12 @@
 
     <!-- 検索フォーム -->
     <form action="searchList.html" th:action="@{/employee/search}" method="post">
-      従業員名：<input type="text" name="searchName" id="searchName" autocomplete="on" list="employeeList">
+      従業員名：<input type="text" name="searchName" id="searchName" autocomplete="on" list="employeeSearchList">
       <button>検索</button><br><br>
       <!-- オートコンプリート用のリスト -->
-      <datalist id="employeeList">
-        <span th:each="employee : ${employeeList}">
-          <option th:value="${employee.name}"></option>
+      <datalist id="employeeSearchList">
+        <span th:each="employeeSearch : ${employeeSearchList}">
+          <option th:value="${employeeSearch.name}"></option>
         </span>
       </datalist>
 
@@ -99,6 +99,14 @@
             </tr>
           </tbody>
         </table>
+        <!-- ページング -->
+        <div class="page" style="text-align: center;">
+          <span th:each="count : ${countList}">
+            <a href="showList.html" th:href="@{/employee/showList(page=${count})}" th:text="${count}+1"
+              style="font-size: large;">1</a>
+          </span>
+        </div>
+
 
         <!-- ここから下を編集する必要はありません -->
       </div>

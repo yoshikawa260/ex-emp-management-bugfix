@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,25 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(Model model, Integer page) {
+		// オートコンプリート用の従業員リストを取得
+		List<Employee> employeeSearchList = employeeService.showList();
+		model.addAttribute("employeeSearchList", employeeSearchList);
+
+		// ページング処理
+		if(page==null) {
+			page=0;
+		}
+		List<Employee>employeeList=employeeService.PagefindAll(page);
 		model.addAttribute("employeeList", employeeList);
+		
+		//ページ数を取得
+		int count = employeeService.count();
+		List<Integer>countList=new ArrayList<>();
+		for(int i=0;i<count/10+1;i++) {
+			countList.add(i);
+		}
+		model.addAttribute("countList", countList);
 		return "employee/list";
 	}
 
