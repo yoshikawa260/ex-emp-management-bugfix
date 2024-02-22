@@ -13,11 +13,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // http.authorizeHttpRequests(customizer -> customizer
-        //         // .requestMatchers("/api/auth").authenticated() // /api/authは認証が必要なページ
-        //         .requestMatchers("/api/**").permitAll() // /api以下はすべて許可
-        //         // .anyRequest().denyAll()); // その他のリクエストはすべて拒否
-        // );
+        http.authorizeHttpRequests(customizer -> customizer
+        .requestMatchers("/**").permitAll() // すべてのリクエストを許可
+        // .requestMatchers("/").authenticated() // ルートへのリクエストは認証が必要
+        //         .anyRequest().denyAll() // それ以外のリクエストは拒否
+        );
         return http.build();
     }
 }
