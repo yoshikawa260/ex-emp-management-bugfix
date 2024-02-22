@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Administrator;
@@ -32,6 +33,18 @@ public class AdministratorRepository {
 		administrator.setPassword(rs.getString("password"));
 		return administrator;
 	};
+
+	// パスワードのハッシュ化
+	private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	public static String hashPassword(String originalPassword) {
+		return passwordEncoder.encode(originalPassword);
+	}
+
+	// パスワードの照合
+	public static boolean isPasswordMatch(String password, String hashedPassword) {
+		return passwordEncoder.matches(password, hashedPassword);
+	}
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
@@ -58,26 +71,38 @@ public class AdministratorRepository {
 	 * @return 管理者情報 存在しない場合はnullを返します
 	 */
 	public Administrator findByMailAddressAndPassward(String mailAddress, String password) {
+
 		String sql = """
-					select 
-					id,
-					name,
-					mail_address,
-					password
-					from 
-					administrators
-					where
-					mail_address=:mailAddress
-					and password=:password
-						""";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("mailAddress", mailAddress).addValue("password",
-				password);
+				select
+				id,
+				name,
+				mail_address,
+				password
+				from
+				administrators
+				where
+				mail_address=:mailAddress
+				    """;
+
+		SqlParameterSource param = new MapSqlParameterSource().addValue("mailAddress", mailAddress);
+
+		// SQLクエリを実行し、結果をAdministratorオブジェクトのリストとして取得します。
 		List<Administrator> administratorList = template.query(sql, param, ADMINISTRATOR_ROW_MAPPER);
+
+		// 管理者が見つからなかった場合、nullを返します。
 		if (administratorList.size() == 0) {
 			return null;
 		}
+
+		// 入力されたパスワードがデータベースに保存されているパスワードと一致しない場合、nullを返します。
+		if (!(isPasswordMatch(password, administratorList.get(0).getPassword()))) {
+			return null;
+		}
+
+		// メールアドレスとパスワードが一致する管理者を返します。
 		return administratorList.get(0);
 	}
+	
 
 	/**
 	 * 管理者情報を挿入します.
@@ -85,13 +110,14 @@ public class AdministratorRepository {
 	 * @param administrator 管理者情報
 	 */
 	public void insert(Administrator administrator) {
-		SqlParameterSource param = new BeanPropertySqlParameterSource(administrator);
+
 		String sql = """
 				insert into administrators(name,mail_address,password)
 				values(:name,:mailAddress,:password);
 				""";
-					
-					
+
+		administrator.setPassword(hashPassword(administrator.getPassword()));
+		SqlParameterSource param = new BeanPropertySqlParameterSource(administrator);
 		template.update(sql, param);
 	}
 
@@ -103,14 +129,14 @@ public class AdministratorRepository {
 	 */
 	public Administrator findByMailAddress(String mailAddress) {
 		String sql = """
-			select 
-			id,
-			name,
-			mail_address,
-			password 
-			from administrators
-			where mail_address=:mailAddress
-			""";
+				select
+				id,
+				name,
+				mail_address,
+				password
+				from administrators
+				where mail_address=:mailAddress
+				""";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("mailAddress", mailAddress);
 		List<Administrator> administratorList = template.query(sql, param, ADMINISTRATOR_ROW_MAPPER);
 		if (administratorList.size() == 0) {
