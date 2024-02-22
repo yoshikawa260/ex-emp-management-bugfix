@@ -120,7 +120,7 @@ public class EmployeeRepository {
 		template.update(updateSql, param);
 	}
 
-	public List<Employee> search(String searchName) {
+	public List<Employee> search(String searchName,int page) {
 		String sql = """
 			SELECT
 			id,
@@ -138,8 +138,11 @@ public class EmployeeRepository {
 			FROM employees
 			where name like :name
 			ORDER BY hire_date desc
+			LIMIT 10 
+			OFFSET :offset
 						""";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%");
+		int offset = page * 10;
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%").addValue("offset", offset);;
 		List<Employee> searchList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 
 		return searchList;
@@ -178,6 +181,17 @@ public class EmployeeRepository {
 	public int count() {
 		String sql = "SELECT COUNT(*) FROM employees";
 		SqlParameterSource param = new MapSqlParameterSource();
+		int count = template.queryForObject(sql, param, Integer.class);
+		return count;
+	}
+	public int SearchCount(String searchName){
+		String sql = """
+			SELECT
+			count(*)
+			FROM employees
+			where name like :name
+				""";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%");
 		int count = template.queryForObject(sql, param, Integer.class);
 		return count;
 	}

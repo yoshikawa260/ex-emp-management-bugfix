@@ -111,22 +111,51 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/search")
-	public String search(String searchName, Model model) {
+	public String search(String searchName,Integer page ,Model model) {
 		if(searchName.equals("")){
-			List<Employee> employeeList = employeeService.showList();
+			if(page==null) {
+				page=0;
+			}
+			List<Employee>employeeList=employeeService.PagefindAll(page);
 			model.addAttribute("employeeList", employeeList);
+			
+			//ページ数を取得
+			int count = employeeService.count();
+			List<Integer>countList=new ArrayList<>();
+			for(int i=0;i<count/10+1;i++) {
+				countList.add(i);
+			}
+			model.addAttribute("countList", countList);
 			return "employee/searchList";
 		}
 
-		List<Employee> employeeList = employeeService.search(searchName);
+		if(page==null) {
+			page=0;
+		}
+		List<Employee> employeeList = employeeService.search(searchName,page);
 
 		if(employeeList.size() == 0){
-			employeeList = employeeService.showList();
+			employeeList = employeeService.PagefindAll(page);
 			model.addAttribute("errorMessage", "１件もありませんでした");
 			model.addAttribute("employeeList", employeeList);
+
+			//ページ数を取得
+			int count = employeeService.count();
+			List<Integer>countList=new ArrayList<>();
+			for(int i=0;i<count/10+1;i++) {
+				countList.add(i);
+			}
+			model.addAttribute("countList", countList);
 			return "employee/searchList";
 		}
 
+		int count = employeeService.searchCount(searchName);
+		List<Integer>countList=new ArrayList<>();
+		for(int i=0;i<count/10+1;i++) {
+			countList.add(i);
+		}
+		model.addAttribute("countList", countList);
+		model.addAttribute("searchName", searchName);
 		model.addAttribute("employeeList", employeeList);
 		return "employee/searchList";
 	}

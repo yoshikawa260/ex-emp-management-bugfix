@@ -61,14 +61,19 @@ public class EmployeeService {
 	 * @param searchName 検索する名前
 	 * @return 検索された従業員情報
 	 */
-	public List<Employee>search(String searchName){
-		List<Employee> employeeList = employeeRepository.search(searchName);
+	public List<Employee>search(String searchName,int page){
+		List<Employee> employeeList = employeeRepository.search(searchName,page);
 		return employeeList;
 	}
 
 	//従業員情報に登録されているレコード数を取得する
 	public int count(){
 		return employeeRepository.count();
+	}
+
+	//検索した従業員情報に登録されているレコード数を取得する
+	public int searchCount(String searchName) {
+		return employeeRepository.SearchCount(searchName);
 	}
 
 	//従業員情報をページングして取得する

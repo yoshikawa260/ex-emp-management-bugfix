@@ -102,7 +102,13 @@
                         </tr>
                     </tbody>
                 </table>
-
+                <!-- ページング -->
+                <div class="page" style="text-align: center;">
+                    <span th:each="count : ${countList}">
+                        <span href="searchList.html" th:href="@{/employee/search(searchName=${searchName}, page=${count})}" th:text="${count}+1"
+                            style="font-size: large;" >1</span>
+                    </span>
+                </div>
                 <!-- ここから下を編集する必要はありません -->
             </div>
         </div>
@@ -110,7 +116,7 @@
     <!-- end container -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="../../static/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 
 </html>
