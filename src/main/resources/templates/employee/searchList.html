@@ -56,14 +56,20 @@
             </li>
             <li class="active">検索結果</li>
         </ol>
+
+        <!-- 検索フォーム -->
         <form action="searchList.html" th:action="@{/employee/search}" method="post">
-            従業員名：<input type="text" name="searchName" id="searchName"> <button>検索</button><br><br>
+            従業員名：<input type="text" name="searchName" id="searchName">
+            <button>検索</button><br><br>
         </form>
+
+        <!-- エラーメッセージ -->
         <div th:if="${errorMessage}" class="alert alert-danger">
             <p th:text="${errorMessage}">
                 検索結果がありません
             </p>
         </div>
+
         <br>
         <!-- table -->
         <div class="row">

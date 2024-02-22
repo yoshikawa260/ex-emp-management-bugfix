@@ -55,8 +55,18 @@
         <a href="list.html" th:href="@{/employee/showList}">従業員リスト</a>
       </li>
     </ol>
+
+    <!-- 検索フォーム -->
     <form action="searchList.html" th:action="@{/employee/search}" method="post">
-      従業員名：<input type="text" name="searchName" id="searchName"> <button >検索</button><br><br>
+      従業員名：<input type="text" name="searchName" id="searchName" autocomplete="on" list="employeeList">
+      <button>検索</button><br><br>
+      <!-- オートコンプリート用のリスト -->
+      <datalist id="employeeList">
+        <span th:each="employee : ${employeeList}">
+          <option th:value="${employee.name}"></option>
+        </span>
+      </datalist>
+
     </form>
     <!-- table -->
     <div class="row">

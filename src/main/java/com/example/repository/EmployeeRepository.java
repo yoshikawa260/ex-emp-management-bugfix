@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.domain.Employee;
 
-import org.springframework.ui.Model;
+
 
 /**
  * employeesテーブルを操作するリポジトリ.
