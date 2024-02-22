@@ -99,6 +99,21 @@
             </tr>
           </tbody>
         </table>
+        <!-- ページング処理 -->
+        <div th:if="${page.total > 1}">
+          <ul class="pagination">
+              <li th:class="${page.number == 0 ? 'disabled' : ''}">
+                  <a th:href="${page.number > 0 ? '@{/employee/showList?page=' + (page.number - 1)} : '#'}">&laquo;</a>
+              </li>
+              <li th:each="pageNumber : ${#numbers.sequence(0, page.totalPages - 1)}"
+                  th:class="${pageNumber == page.number ? 'active' : ''}">
+                  <a th:href="@{/employee/showList?page=${pageNumber}}"><span th:text="${pageNumber + 1}"></span></a>
+              </li>
+              <li th:class="${page.number + 1 == page.totalPages ? 'disabled' : ''}">
+                  <a th:href="${page.number + 1 < page.totalPages ? '@{/employee/showList?page=' + (page.number + 1)} : '#'}">&raquo;</a>
+              </li>
+          </ul>
+      </div>
 
         <!-- ここから下を編集する必要はありません -->
       </div>

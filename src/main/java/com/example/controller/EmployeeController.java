@@ -3,6 +3,8 @@ package com.example.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,9 +51,12 @@ public class EmployeeController {
 	 * @return 従業員一覧画面
 	 */
 	@GetMapping("/showList")
-	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+	public String showList(Model model, Pageable pageable) {
+		// List<Employee> employeeList = employeeService.showList();
+		Page<Employee> page = employeeService.findAllPage(pageable);
+		List<Employee>employeeList=page.getContent();
 		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("page", page);
 		return "employee/list";
 	}
 

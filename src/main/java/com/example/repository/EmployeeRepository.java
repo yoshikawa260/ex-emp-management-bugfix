@@ -3,6 +3,9 @@ package com.example.repository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,8 +14,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.domain.Employee;
-
-
 
 /**
  * employeesテーブルを操作するリポジトリ.
@@ -121,26 +122,55 @@ public class EmployeeRepository {
 
 	public List<Employee> search(String searchName) {
 		String sql = """
-			SELECT
-			id,
-			name,
-			image,
-			gender,
-			hire_date,
-			mail_address,
-			zip_code,
-			address,
-			telephone,
-			salary,
-			characteristics,
-			dependents_count
-			FROM employees
-			where name like :name
-			ORDER BY hire_date desc
-						""";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+searchName+"%");
+				SELECT
+				id,
+				name,
+				image,
+				gender,
+				hire_date,
+				mail_address,
+				zip_code,
+				address,
+				telephone,
+				salary,
+				characteristics,
+				dependents_count
+				FROM employees
+				where name like :name
+				ORDER BY hire_date desc
+							""";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + searchName + "%");
 		List<Employee> searchList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 
 		return searchList;
+	}
+
+	// 従業員一覧をページングで表示するためのメソッド
+	public Page<Employee> findAllPage(Pageable pageable) {
+		String countSql = "SELECT COUNT(*) FROM employees";
+		int total = template.queryForObject(countSql, new MapSqlParameterSource(), Integer.class);
+		String sql = """
+				SELECT
+				id,
+				name,
+				image,
+				gender,
+				hire_date,
+				mail_address,
+				zip_code,
+				address,
+				telephone,
+				salary,
+				characteristics,
+				dependents_count
+				FROM employees
+				ORDER BY hire_date desc
+				LIMIT :limit 
+				OFFSET :offset
+				""";
+		SqlParameterSource param=new MapSqlParameterSource().addValue("limit", pageable.getPageSize()).addValue("offset", pageable.getOffset());
+		List<Employee> employeeList = template.query(sql,param,EMPLOYEE_ROW_MAPPER);
+
+		return new PageImpl<Employee>(employeeList, pageable, total);
 	}
 }
