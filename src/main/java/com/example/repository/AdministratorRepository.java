@@ -94,10 +94,7 @@ public class AdministratorRepository {
 			return null;
 		}
 
-		// 入力されたパスワードがデータベースに保存されているパスワードと一致しない場合、nullを返します。
-		if (!(isPasswordMatch(password, administratorList.get(0).getPassword()))) {
-			return null;
-		}
+
 
 		// メールアドレスとパスワードが一致する管理者を返します。
 		return administratorList.get(0);
